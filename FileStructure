@@ -1,0 +1,93 @@
+UrbanQuest/
+├── README.md
+├── docker-compose.yml           # Orchestrates all microservices and the frontend
+├── frontend/                    # React PWA project
+│   ├── Dockerfile               # Build instructions for containerizing the frontend
+│   ├── package.json             # Node dependencies and scripts
+│   ├── public/
+│   │   ├── index.html           # Main HTML file
+│   │   ├── manifest.json        # PWA manifest file
+│   │   └── favicon.ico
+│   └── src/
+│       ├── assets/              # Images, fonts, etc.
+│       ├── components/          # Reusable React components
+│       │   ├── MapComponent.jsx
+│       │   ├── Login.jsx
+│       │   ├── Registration.jsx
+│       │   ├── POIDetails.jsx
+│       │   ├── QuestDashboard.jsx
+│       │   └── NotificationList.jsx
+│       ├── pages/               # Top-level page components
+│       │   ├── HomePage.jsx
+│       │   ├── ProfilePage.jsx
+│       │   ├── QuestPage.jsx
+│       │   └── POIPage.jsx
+│       ├── services/            # API service calls and authentication helpers
+│       │   ├── api.js
+│       │   └── auth.js
+│       ├── utils/               # Utility functions (helpers, constants, etc.)
+│       │   └── helpers.js
+│       ├── App.js               # Main React application
+│       ├── index.js             # Entry point for React
+│       └── serviceWorker.js     # Service Worker for offline capabilities
+└── backend/                     # Contains all backend microservices
+    ├── user-service/            # User Service
+    │   ├── Dockerfile           # Containerization instructions for the service
+    │   ├── pom.xml              # Maven build file (if using Maven)
+    │   └── src/
+    │       ├── main/
+    │       │   ├── java/com/urbanquest/userservice/
+    │       │   │   ├── controllers/       # REST controllers (e.g., AuthController.java)
+    │       │   │   ├── models/            # Domain models/entities (e.g., User.java)
+    │       │   │   ├── repositories/      # Spring Data repositories (e.g., UserRepository.java)
+    │       │   │   └── services/          # Business logic services (e.g., UserService.java)
+    │       │   ├── config/                # Security and other configurations (e.g., SecurityConfig.java)
+    │       │   └── UrbanQuestUserServiceApplication.java  # Main Spring Boot application class
+    │       └── resources/
+    │           ├── application.yml        # Configuration properties
+    │           └── schema.sql             # SQL schema for PostgreSQL (if applicable)
+    ├── poi-service/             # POI (Points of Interest) Service
+    │   ├── Dockerfile
+    │   ├── pom.xml
+    │   └── src/
+    │       ├── main/
+    │       │   ├── java/com/urbanquest/poiservice/
+    │       │   │   ├── controllers/       # Endpoints for managing POIs
+    │       │   │   ├── models/            # POI entity, media, review models
+    │       │   │   ├── repositories/      # Data access layer for POIs
+    │       │   │   └── services/          # Business logic for POI operations
+    │       │   ├── config/                # Configuration (e.g., external API settings)
+    │       │   └── UrbanQuestPOIServiceApplication.java
+    │       └── resources/
+    │           ├── application.yml
+    │           └── schema.sql
+    ├── quest-service/           # Quest & Gamification Service
+    │   ├── Dockerfile
+    │   ├── pom.xml
+    │   └── src/
+    │       ├── main/
+    │       │   ├── java/com/urbanquest/questservice/
+    │       │   │   ├── controllers/       # REST endpoints for quests
+    │       │   │   ├── models/            # Quest, quest participation, rewards entities
+    │       │   │   ├── repositories/      # Data access for quest-related data
+    │       │   │   └── services/          # Business logic (calculating points, badges, etc.)
+    │       │   ├── config/                # Configuration files
+    │       │   └── UrbanQuestQuestServiceApplication.java
+    │       └── resources/
+    │           ├── application.yml
+    │           └── schema.sql
+    └── notification-service/    # Notification Service
+        ├── Dockerfile
+        ├── pom.xml
+        └── src/
+            ├── main/
+            │   ├── java/com/urbanquest/notificationservice/
+            │   │   ├── controllers/       # WebSocket/STOMP endpoints, REST endpoints for notifications
+            │   │   ├── models/            # Notification entity definitions
+            │   │   ├── repositories/      # Data access layer for notifications
+            │   │   └── services/          # Business logic for sending and scheduling notifications
+            │   ├── config/                # WebSocket and messaging configuration (RabbitMQ/Kafka, if applicable)
+            │   └── UrbanQuestNotificationServiceApplication.java
+            └── resources/
+                ├── application.yml
+                └── schema.sql
