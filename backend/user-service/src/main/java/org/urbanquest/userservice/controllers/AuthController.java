@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import org.urbanquest.userservice.dto.ApiResponse;
 import org.urbanquest.userservice.dto.AuthRequest;
 import org.urbanquest.userservice.dto.AuthResponse;
-import org.urbanquest.userservice.exceptions.UserNotFoundException;
 import org.urbanquest.userservice.models.User;
 import org.urbanquest.userservice.services.UserService;
 import org.urbanquest.userservice.utils.JWTUtil;
