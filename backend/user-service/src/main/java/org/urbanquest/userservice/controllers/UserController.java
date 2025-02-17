@@ -11,6 +11,7 @@ import org.urbanquest.userservice.exceptions.UserNotFoundException;
 import org.urbanquest.userservice.models.User;
 import org.urbanquest.userservice.services.UserService;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -61,12 +62,34 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteUserById(@PathVariable("id") @NotNull UUID id) {
-        userService.deleteUser(id);
+        userService.deleteUserById(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(
                 HttpStatus.NO_CONTENT.value(),
                 "User deleted successfully",
                 null
+        ));
+    }
+
+    @DeleteMapping("/email/{email}")
+    public ResponseEntity<ApiResponse<Void>> deleteUserById(@PathVariable("email") @NotNull String email) {
+        userService.deleteUserByEmail(email);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(
+                HttpStatus.NO_CONTENT.value(),
+                "User deleted successfully",
+                null
+        ));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "Fetched all users successfully",
+                users
         ));
     }
 }

@@ -12,6 +12,7 @@ import org.urbanquest.userservice.exceptions.UserNotFoundException;
 import org.urbanquest.userservice.models.User;
 import org.urbanquest.userservice.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -76,13 +77,32 @@ public class UserService {
         return user;
     }
 
-    public void deleteUser(@NotNull UUID id) {
-        logger.debug("Attempting to delete user: {}", id);
+    public void deleteUserById(@NotNull UUID id) {
+        logger.debug("Attempting to delete user with id: {}", id);
 
         User user = userRepo.findById(id)
                 .orElseThrow(() ->  UserNotFoundException.withId(id));
         userRepo.delete(user);
 
-        logger.info("User deleted: {}", user);
+        logger.info("User with id {} deleted: {}", id, user);
+    }
+
+    public void deleteUserByEmail(@NotNull String email) {
+        logger.debug("Attempting to delete user with email: {}", email);
+
+        User user = userRepo.findByEmail(email)
+                .orElseThrow(() ->  UserNotFoundException.withEmail(email));
+        userRepo.delete(user);
+
+        logger.info("User with email {} deleted: {}", email, user);
+    }
+
+    public List<User> getAllUsers() {
+        logger.info("Attempting to fetch all users");
+
+        List<User> allUsers = userRepo.findAll();
+
+        logger.info("All users fetched successfully");
+        return allUsers;
     }
 }

@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.urbanquest.userservice.dto.ApiResponse;
 import org.urbanquest.userservice.dto.AuthRequest;
 import org.urbanquest.userservice.dto.AuthResponse;
+import org.urbanquest.userservice.exceptions.UserNotFoundException;
 import org.urbanquest.userservice.models.User;
 import org.urbanquest.userservice.services.UserService;
 import org.urbanquest.userservice.utils.JWTUtil;
@@ -50,22 +52,38 @@ public class AuthController {
     public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody @Valid AuthRequest authRequest) {
         logger.info("Received request to login user");
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword())
+            );
 
-        logger.info("Testing");
+            logger.info("Testing");
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.generateToken(authRequest.getEmail());
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String token = jwtUtil.generateToken(authRequest.getEmail());
 
-        logger.info("User logged in successfully");
-        logger.info("JWT Token: {} ", token);
+            logger.info("User logged in successfully");
+            logger.info("JWT Token: {} ", token);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(
-                HttpStatus.OK.value(),
-                "User logged in successfully",
-                new AuthResponse(token)
-        ));
+            return ResponseEntity.status(HttpStatus.OK).body(new ApiResponse<>(
+                    HttpStatus.OK.value(),
+                    "User logged in successfully",
+                    new AuthResponse(token)
+            ));
+        }
+        catch(BadCredentialsException e) {
+            logger.error("User not found: {}", authRequest);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    HttpStatus.NOT_FOUND.value(),
+                    "Wrong email or password",
+                    null
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    HttpStatus.NOT_FOUND.value(),
+                    "Wrong email or password",
+                    null
+            ));
+        }
     }
 }
