@@ -14,7 +14,6 @@ import org.urbanquest.userservice.repository.BadgeRepository;
 import org.urbanquest.userservice.repository.UserBadgeRepository;
 import org.urbanquest.userservice.repository.UserRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -67,10 +66,14 @@ public class UserBadgeService {
     }
 
     public List<UserBadgeResponse> getAllBadgesOfCurrentUser(String email) {
+        log.info("Getting all badges of user with email {}", email);
+
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> UserNotFoundException.withEmail(email));
 
         List<UserBadge> userBadges = userBadgeRepository.findByUser_Id(user.getId());
+
+        log.info("Found {} badges", userBadges.size());
 
         return userBadges.stream()
                 .map(userBadge -> new UserBadgeResponse(

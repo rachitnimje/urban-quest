@@ -1,6 +1,7 @@
 package org.urbanquest.userservice.controllers;
 
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -15,6 +16,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/badges")
 @Validated
+@Slf4j
 public class BadgeController {
 
     final private BadgeService badgeService;
@@ -25,6 +27,8 @@ public class BadgeController {
 
     @PostMapping("/")
     public ResponseEntity<ApiResponse<Badge>> createBadge(@RequestBody @Validated Badge badge) {
+        log.info("Received request to create badge {}", badge);
+
         Badge savedBadge = badgeService.createBadge(badge);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(
@@ -36,6 +40,8 @@ public class BadgeController {
 
     @GetMapping("/")
     public ResponseEntity<ApiResponse<List<Badge>>> getAllBadges() {
+        log.info("Received request to get all badges");
+
         List<Badge> badges = badgeService.getAllBadges();
         return ResponseEntity.ok(new ApiResponse<>(
                 HttpStatus.OK.value(),
@@ -46,6 +52,8 @@ public class BadgeController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Badge>> getBadge(@PathVariable UUID id) {
+        log.info("Received request to get badge {}", id);
+
         Badge badge = badgeService.getBadge(id);
         return ResponseEntity.ok(new ApiResponse<>(
                 HttpStatus.OK.value(),
@@ -56,6 +64,8 @@ public class BadgeController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Badge>> updateBadge(@PathVariable @NotNull UUID id, @RequestBody Badge badge) {
+        log.info("Received request to update badge {}", badge);
+
         Badge updatedBadge = badgeService.updateBadge(id, badge);
         return ResponseEntity.ok(new ApiResponse<>(
                 HttpStatus.OK.value(),
@@ -66,6 +76,8 @@ public class BadgeController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteBadge(@PathVariable @NotNull UUID id) {
+        log.info("Received request to delete badge {}", id);
+
         badgeService.deleteBadge(id);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(
