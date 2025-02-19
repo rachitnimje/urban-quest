@@ -39,7 +39,7 @@ public class BadgeController {
         List<Badge> badges = badgeService.getAllBadges();
         return ResponseEntity.ok(new ApiResponse<>(
                 HttpStatus.OK.value(),
-                "Badge added successfully",
+                "All badges fetched successfully",
                 badges
         ));
     }
@@ -49,7 +49,7 @@ public class BadgeController {
         Badge badge = badgeService.getBadge(id);
         return ResponseEntity.ok(new ApiResponse<>(
                 HttpStatus.OK.value(),
-                "Badge retrieved successfully",
+                "Badge fetched successfully",
                 badge
         ));
     }

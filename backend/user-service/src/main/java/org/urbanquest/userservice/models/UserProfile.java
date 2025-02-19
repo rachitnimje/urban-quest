@@ -1,5 +1,6 @@
 package org.urbanquest.userservice.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class UserProfile {
     @Column (name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    // The profile "belongs" to a user.
     @OneToOne
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private User user;
@@ -29,5 +31,6 @@ public class UserProfile {
     private String profilePictureUrl;
 
     @ManyToOne
+    @JoinColumn(name = "location_id")
     private Location location;
 }

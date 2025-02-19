@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.urbanquest.userservice.dto.ApiResponse;
@@ -47,6 +48,17 @@ public class UserController {
         ));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+
+        return ResponseEntity.ok(new ApiResponse<>(
+                HttpStatus.OK.value(),
+                "Fetched all users successfully",
+                users
+        ));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<User>> updateUser(
             @PathVariable("id") @NotNull UUID id,
@@ -82,14 +94,15 @@ public class UserController {
         ));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<ApiResponse<List<User>>> getAllUsers() {
-        List<User> users = userService.getAllUsers();
+    @DeleteMapping("/me")
+    public ResponseEntity<ApiResponse<Void>> deleteCurrentUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
-        return ResponseEntity.ok(new ApiResponse<>(
-                HttpStatus.OK.value(),
-                "Fetched all users successfully",
-                users
+        userService.deleteUserByEmail(email);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ApiResponse<>(
+                HttpStatus.NO_CONTENT.value(),
+                "Current user deleted successfully",
+                null
         ));
     }
 }

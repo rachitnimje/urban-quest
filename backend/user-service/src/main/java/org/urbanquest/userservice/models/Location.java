@@ -21,7 +21,7 @@ public class Location {
     @Column(nullable = false, updatable = false)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotBlank(message = "city cannot be blank")
     private String city;
 

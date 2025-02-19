@@ -1,14 +1,13 @@
 package org.urbanquest.userservice.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -23,6 +22,7 @@ public class User {
 
     @Column(unique = true, nullable = false)
     @NotBlank(message = "email cannot be empty")
+    @Email(message = "Invalid email format")
     private String email;
 
     @NotBlank(message = "first name cannot be empty")
@@ -34,23 +34,28 @@ public class User {
 
     @NotBlank(message = "password cannot be empty")
     @Column(nullable = false)
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+            message = "Password must contain at least 1 upper case letter, 1 lower case letter, 1 number, 1 special character, and be at least 8 characters long"
+    )
     private String password;
 
     @Column(name = "phone_number", unique = true, nullable = false)
     @NotBlank(message = "phone number cannot be empty")
+    @Pattern(regexp = "^\\d{10}$", message = "Phone number must contain 10 digits")
     private String phoneNumber;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("user")
-    private Set<UserBadge> badges = new HashSet<>();
+//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @Fetch(FetchMode.SUBSELECT)
+//    @JsonIgnore
+//    private Set<UserBadge> badges = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-
 }
 
 
